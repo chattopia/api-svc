@@ -8,3 +8,4 @@ async fn health_check() -> HttpResponse {
 pub fn routes() -> Scope {
     web::scope("/health").service(health_check)
 }
+
