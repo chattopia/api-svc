@@ -1,5 +1,7 @@
 use actix_web::{App, HttpServer};
 
+use log::warn;
+
 use std::io::ErrorKind;
 use std::net::{IpAddr, Ipv4Addr, Ipv6Addr, SocketAddr};
 
@@ -23,7 +25,7 @@ async fn main() -> std::io::Result<()> {
         Ok(srv) => srv,
         Err(err) if err.kind() == ErrorKind::AddrNotAvailable
             || err.raw_os_error() == Some(EAFNOSUPPORT) => {
-            eprintln!("IPv6 not available, falling back to IPv4");
+            warn!("IPv6 not available, falling back to IPv4");
 
             let addr_v4 = SocketAddr::new(IpAddr::V4(Ipv4Addr::UNSPECIFIED), PORT);
             HttpServer::new(app_factory).bind_auto_h2c(addr_v4)?
