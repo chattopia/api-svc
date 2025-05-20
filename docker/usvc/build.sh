@@ -15,3 +15,4 @@ docker build -f "${SCRIPT_DIR}/Dockerfile" -t "${IMAGE_TAG}" \
              --label org.opencontainers.image.revision="$(git rev-parse HEAD)" \
              --label org.opencontainers.image.created="$(date -u +'%Y-%m-%dT%H:%M:%SZ')" \
              "${REPOSITORY_ROOT}"
+

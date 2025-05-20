@@ -44,3 +44,4 @@ COPY --from=builder /rootfs/ /
 USER usvc
 EXPOSE 8000
 ENTRYPOINT ["/bin/chattopia-api"]
+
