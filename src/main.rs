@@ -8,6 +8,7 @@ mod health;
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     const PORT: u16 = 8000;
+    const EAFNOSUPPORT: i32 = 97; // Linux / Unix error code for Address family not supported
 
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 
@@ -20,7 +21,8 @@ async fn main() -> std::io::Result<()> {
     let addr_v6 = SocketAddr::new(IpAddr::V6(Ipv6Addr::UNSPECIFIED), PORT);
     let server = match HttpServer::new(app_factory).bind_auto_h2c(addr_v6) {
         Ok(srv) => srv,
-        Err(err) if err.kind() == ErrorKind::AddrNotAvailable => {
+        Err(err) if err.kind() == ErrorKind::AddrNotAvailable
+            || err.raw_os_error() == Some(EAFNOSUPPORT) => {
             eprintln!("IPv6 not available, falling back to IPv4");
 
             let addr_v4 = SocketAddr::new(IpAddr::V4(Ipv4Addr::UNSPECIFIED), PORT);
